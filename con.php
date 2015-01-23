@@ -38,6 +38,53 @@ class Net{
 		$rsme = sqrt((1/(2*count($inputs)))*total_sum);
 		return $rsme;
 	}
+
+	function learn( $input, $expected_output ){
+		$this->run_net( $input );
+		for ( $i = 0; $i < count($this->layers); $i++ ){
+			#Need the backwards index
+			$index = count($this->layers)-1-i;
+			if ($this->layers[index]->previousLayer != null){
+				$this->layers[index]->compute_deltas($expected_output);
+			}
+		}
+		for ( $i = 1; $i < count($this->layers); $i++ ){
+			$this->layers[i]->change_weights();
+		}
+	}
+
+	function run_net($inputs){
+		if ( count($inputs) != $this->layers[0]->neurons->length){
+			echo 'Data input size does not match network input size';
+		}else{
+			# Set up initial inputs
+			for ( $i = 0; $i < count($this->layers[0]->neurons); $i++){
+				$this->layers[0]->neurons[i]->output = $inputs[i];
+			}
+
+			#Traverse layers (except for input) and compute outputs
+			for ( $i = 1; $i < count($this->layers); $i++ ){
+				$this->layers[i]->run_layer();
+			}
+		}
+
+		return $this->get_output();
+	}
+
+	function wire_connections(){
+		for ( $i = 0; $i < count($this->layers); $i++){
+			$this->layers[$i]->add_input_layer($this->layers[$i-1]);
+		}
+	}
+
+	function get_output(){
+		$rv = [];
+		$output_layer = $this->layers[count($this->layers)-1];
+		for ( $i = 0; $i < count($output_layer->neurons); $i++){
+			array_push($rv,$output_layer->neurons[$i]->output);
+		}
+		return rv;
+	}
 }
 
 class Layer{
