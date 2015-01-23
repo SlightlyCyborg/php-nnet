@@ -45,6 +45,51 @@ class Layer{
 		}
 		return $rv;
 	}
+
+	function add_input_layer($input_layer){
+		$this->previousLayer = $input_layer;
+		$this->previousLayer = $this;
+		for ( $i = 0; $i < count($this->neurons); $i++){
+			for ( $j = 0; $j < count($this->input_layer->neurons); $j++){
+				$con = new Connection($this->input_layer->neurons[$j], $this->neurons[$i]);
+				$this->neurons[$i]->add_input($con);
+				$this->input_layer->neurons[$j]->add_output($connection);
+			}
+		}
+	}
+
+	function compute_deltas($expected){
+		if( $this->nextLayer == null ){
+			for ( $i = 0; $i < count($this->neurons); $i++ ){
+				$this->neurons[$i]->compute_output_delta($expected[i]);
+			}
+		}else{
+			for ( $i = 0; $i < count($this->neurons); $i++ ){
+				$this->neurons[$i]->compute_delta();
+			}
+		}
+	}
+
+	function change_weights(){
+		for( $i = 0; $i < count($this->neurons->length); $i++ ){
+			$this->neurons[$i]->change_weights();
+			$this->neurons[$i]->change_bias();
+		}
+	}
+
+	function run_layer(){
+		for ( $i = 0; $i < count($this->neurons); $i++ ){
+			$this->neurons[i]->calculate_output();
+		}
+	}
+
+	function next(){
+		return $this->nextLayer
+	}
+
+	function previous(){
+		return $this->previousLayer
+	}
 }
 
 class Neuron{
@@ -106,7 +151,15 @@ class Neuron{
 	}
 
 	function change_weights(){
-		//TO BE IMPLEMENTED
+		if ($this->layer->previousLayer != NULL){
+			for ($i = 0 ; count($this->input_connections; $i++ ){
+				$this->input_connections[$i]->weight += $this->input_connections[i]->n_from->output * $this->delta * -> $layer->learning_rate;
+			}
+		}
+	}
+
+	function change_bias(){
+		$this->bias += $this->layer->learning_rate * $this->delta
 	}
 }
 
