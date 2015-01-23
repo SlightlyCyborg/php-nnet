@@ -65,6 +65,49 @@ class Neuron{
 	function __toString(){
 		return "Neuron:\n";
 	}
+
+	function sigmoid($x){
+		return 1/(1+pow(2.71828,(-*$this->alpha * $x)));
+	}
+
+	function add_input($connection){
+		array_push($this->input_connections, $connection);
+	}
+
+	function add_output($output){
+		array_push($this->output_connections, $output);
+	}
+
+	function calculate_net_input(){
+		$this->net_input = 0;
+		for( $i = 0; $i < count($this->input_connections); $i++){
+			$c = input_connections[i];
+			$net_input += $c->weight * $c->n_from.output;
+		}
+		$this->net_input += $this->$bias;
+	}
+
+	function calculate_output(){
+		$this->calculate_net_input();
+		$this->output = $this->sigmoid($this->net_input);
+	}
+
+	function compute_output_delta($expected){
+		$this->delta = $this->output(1-$this.output)*($this->expected-$this->output);
+	}
+
+	function compute_delta(){
+		$delta_sum = 0;
+		for( $i = 0; $i < count($this->layer->next()->neurons); $i++){
+			$nlayer_neuron = $layer->next()->neurons[i];
+			$delta_sum += $nlayer_neuron->delta*$this->output_connections[i]->weight;
+		}
+		$this->delta = $output*(1-$output)*$delta_sum;
+	}
+
+	function change_weights(){
+		//TO BE IMPLEMENTED
+	}
 }
 
 class Connection{
