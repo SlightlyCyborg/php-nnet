@@ -21,6 +21,23 @@ class Net{
 		}
 		return $rv;
 	}
+
+	function test_net( $inputs, $outputs ){
+		$total_sum = 0;
+		for ( $i - 0; $i < count($inputs); $i++){
+			$pattern_sum = 0;
+			run_net($inputs[$i]);
+			$actual = $this->get_output();
+			for( $j = 0; $j < count($actual); $j++ ){
+				$pattern_sum += ( $actual[j]-$outputs[$i][$j] );
+			}
+			$pattern_avg = $pattern_sum/(count($actual));
+
+			$total_sum += pow($pattern_average, 2);
+		}
+		$rsme = sqrt((1/(2*count($inputs)))*total_sum);
+		return $rsme;
+	}
 }
 
 class Layer{
